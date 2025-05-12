@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Lab Suite</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6C63FF;
+      --secondary: #4D44DB;
+      --accent: #FF6584;
+      --light: #F8F9FF;
+      --dark: #1A1A2E;
+      --success: #4CC9F0;
+      --warning: #F8961E;
+      --danger: #F72585;
+      --bg: #F0F2FF;
+      --card-bg: #FFFFFF;
+      --text: #2B2D42;
+      --text-light: #8D99AE;
+      --shadow-sm: 0 2px 8px rgba(108, 99, 255, 0.1);
+      --shadow-md: 0 4px 12px rgba(108, 99, 255, 0.15);
+      --shadow-lg: 0 8px 24px rgba(108, 99, 255, 0.2);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .dark-mode {
+      --primary: #8A85FF;
+      --secondary: #6C63FF;
+      --accent: #FF8FA3;
+      --light: #1A1A2E;
+      --dark: #F8F9FF;
+      --bg: #0F0F1F;
+      --card-bg: #242440;
+      --text: #E9ECEF;
+      --text-light: #A8B2D1;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      background-color: var(--card-bg);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-text h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text p {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      font-weight: 400;
+    }
+
+    .theme-toggle {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      font-size: 1.2rem;
+    }
+
+    .theme-toggle:hover {
+      transform: rotate(30deg) scale(1.1);
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.75rem;
+      padding: 2rem;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      border: 1px solid rgba(108, 99, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .card-header {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid rgba(108, 99, 255, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .card-header h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .card-header .icon {
+      font-size: 1.5rem;
+      background: rgba(108, 99, 255, 0.1);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+
+    .card-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    input, select, textarea, button {
+      font-family: 'Inter', sans-serif;
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.85rem 1.25rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid rgba(108, 99, 255, 0.2);
+      background: var(--light);
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .dark-mode input, 
+    .dark-mode select, 
+    .dark-mode textarea {
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+    }
+
+    button:not(.theme-toggle) {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      padding: 0.85rem 1.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-sm);
+    }
+
+    button:not(.theme-toggle):hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    button:not(.theme-toggle):active {
+      transform: translateY(0);
+    }
+
+    .output {
+      background: var(--light);
+      padding: 1.25rem;
+      border-radius: var(--radius-sm);
+      margin-top: auto;
+      font-size: 0.95rem;
+      overflow: auto;
+    }
+
+    .dark-mode .output {
+      background: rgba(0,0,0,0.1);
+    }
+
+    /* Color specific components */
+    .color-preview {
+      width: 100%;
+      height: 100px;
+      border-radius: var(--radius-sm);
+      margin: 1.25rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .color-value {
+      background: rgba(0,0,0,0.2);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      backdrop-filter: blur(5px);
+    }
+
+    .range-slider {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 10px;
+      border-radius: 5px;
+      background: var(--light);
+      outline: none;
+      margin: 1.25rem 0;
+    }
+
+    .range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .range-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+    }
+
+    .color-swatch {
+      height: 40px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .color-swatch:hover {
+      transform: scale(1.05);
+    }
+
+    .color-swatch.active {
+      transform: scale(1.1);
+      box-shadow: 0 0 0 3px var(--primary);
+    }
+
+    /* Lightbulb */
+    .lightbulb {
+      width: 100%;
+      max-height: 120px;
+      object-fit: contain;
+      margin: 1.25rem 0;
+      transition: var(--transition);
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0));
+    }
+
+    .lightbulb.light-on {
+      filter: drop-shadow(0 0 8px var(--accent));
+    }
+
+    /* Task Manager */
+    .task-list {
+      list-style: none;
+      margin-top: 1rem;
+    }
+
+    .task-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem;
+      margin-bottom: 0.75rem;
+      background: var(--light);
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+
+    .dark-mode .task-item {
+      background: rgba(0,0,0,0.1);
+    }
+
+    .task-completed {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+
+    .task-delete {
+      color: var(--danger);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.25rem;
+      font-size: 1.1rem;
+    }
+
+    /* Feedback Card */
+    .feedback-card {
+      background: var(--light);
+      padding: 1.25rem;
+      margin-top: 1.25rem;
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--primary);
+    }
+
+    .dark-mode .feedback-card {
+      background: rgba(0,0,0,0.1);
+    }
+
+    /* Form Group */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .error-message {
+      color: var(--danger);
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+
+    /* Button Group */
+    .button-group {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .button-group button {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    /* Animations */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    /* Clock */
+    .clock-display {
+      font-size: 2.5rem;
+      text-align: center;
+      padding: 1.5rem 0;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+      }
+      
+      .header {
+        padding: 1.25rem;
+      }
+      
+      .logo-text h1 {
+        font-size: 1.3rem;
+      }
+      
+      .clock-display {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <div class="logo-text">
+        <h1>web design project</h1>
+        <p>Created by Suryanshu Singh</p>
+      </div>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+    <!-- Color Mixer -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">🎨</div>
+        <h2>Color Mixer</h2>
+      </div>
+      <div class="card-content">
+        <label>Red: <span id="redValue">0</span></label>
+        <input type="range" min="0" max="255" value="120" id="red" class="range-slider" oninput="updateColor()">
+        
+        <label>Green: <span id="greenValue">0</span></label>
+        <input type="range" min="0" max="255" value="80" id="green" class="range-slider" oninput="updateColor()">
+        
+        <label>Blue: <span id="blueValue">0</span></label>
+        <input type="range" min="0" max="255" value="200" id="blue" class="range-slider" oninput="updateColor()">
+        
+        <div id="colorBox" class="color-preview">
+          <span class="color-value" id="rgbValue">RGB: 120, 80, 200</span>
+          <span class="color-value" id="hexValue">HEX: #7850C8</span>
+        </div>
+        <button onclick="copyColor()">Copy Color Code</button>
+      </div>
+    </div>
+
+    <!-- Lightbulb Simulator -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">💡</div>
+        <h2>Lightbulb Simulator</h2>
+      </div>
+      <div class="card-content">
+        <img id="lightbulb" class="lightbulb" src="https://cdn-icons-png.flaticon.com/512/702/702797.png" alt="Lightbulb" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwQjREOCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xNSA4LjVWNS41YTMuNSAzLjUgMCAwIDAtNyAwdjMiLz48cGF0aCBkPSJNMTIgM3YxIi8+PHBhdGggZD0iTTE5IDEwaC0xNCIvPjxwYXRoIGQ9Ik0xMiAxM2ExIDEgMCAwIDEgMSAxaDJhMSAxIDAgMCAxIDEgMXYyYTEgMSAwIDAgMS0xIDFoLTZhMSAxIDAgMCAxLTEtMXYtMmExIDEgMCAwIDEgMS0xaDJhMSAxIDAgMCAxIDEtMXoiLz48L3N2Zz4='">
+        <button onclick="toggleLight()">Toggle Light</button>
+      </div>
+    </div>
+
+    <!-- Registration Form -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">📝</div>
+        <h2>Registration Form</h2>
+      </div>
+      <div class="card-content">
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="regName">Name:</label>
+            <input type="text" id="regName">
+            <span class="error-message" id="regNameError">Name is required</span>
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email:</label>
+            <input type="email" id="regEmail">
+            <span class="error-message" id="regEmailError">Valid email required</span>
+          </div>
+          <div class="form-group">
+            <label for="regPassword">Password:</label>
+            <input type="password" id="regPassword">
+            <span class="error-message" id="regPasswordError">6+ characters required</span>
+          </div>
+          <button type="submit">Register</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Basic Calculator -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">➕</div>
+        <h2>Basic Calculator</h2>
+      </div>
+      <div class="card-content">
+        <input type="number" id="inputA" placeholder="First number">
+        <input type="number" id="inputB" placeholder="Second number">
+        <button onclick="performOperations()">Calculate All Operations</button>
+        <div class="output" id="output1"></div>
+      </div>
+    </div>
+
+    <!-- Advanced Calculator -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">➗</div>
+        <h2>Advanced Calculator</h2>
+      </div>
+      <div class="card-content">
+        <input type="number" id="num2" placeholder="First number">
+        <input type="number" id="num3" placeholder="Second number">
+        <select id="operation">
+          <option value="add">Addition (+)</option>
+          <option value="subtract">Subtraction (-)</option>
+          <option value="multiply">Multiplication (×)</option>
+          <option value="divide">Division (÷)</option>
+        </select>
+        <button onclick="calculate()">Calculate</button>
+        <div class="output" id="output7"></div>
+      </div>
+    </div>
+
+    <!-- Number Operations -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">🔢</div>
+        <h2>Number Operations</h2>
+      </div>
+      <div class="card-content">
+        <input type="number" id="num1" placeholder="Enter a number">
+        <div class="button-group">
+          <button onclick="calculateSquare()">Square</button>
+          <button onclick="addNumbers()">Add Two</button>
+          <button onclick="checkEvenOdd()">Even/Odd</button>
+        </div>
+        <div class="output" id="output6"></div>
+      </div>
+    </div>
+
+    <!-- Grade Calculator -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">📊</div>
+        <h2>Grade Calculator</h2>
+      </div>
+      <div class="card-content">
+        <input type="number" id="marks" placeholder="Enter marks (0-100)">
+        <button onclick="calculateGrade()">Calculate Grade</button>
+        <div class="output" id="result"></div>
+      </div>
+    </div>
+
+    <!-- Password Toggle -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">🔑</div>
+        <h2>Password Toggle</h2>
+      </div>
+      <div class="card-content">
+        <input type="password" id="passwords" placeholder="Enter password">
+        <button onclick="togglePassword(event)">Show Password</button>
+      </div>
+    </div>
+
+    <!-- Color Changer -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">🌈</div>
+        <h2>Button Color Changer</h2>
+      </div>
+      <div class="card-content">
+        <button id="colorButton">Click to Change My Color</button>
+      </div>
+    </div>
+
+    <!-- Task Manager -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">✅</div>
+        <h2>Task Manager</h2>
+      </div>
+      <div class="card-content">
+        <input type="text" id="taskInput" placeholder="New task...">
+        <button onclick="addTask()">Add Task</button>
+        <ul class="task-list" id="taskList"></ul>
+      </div>
+    </div>
+
+    <!-- Feedback Collector -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">🌟</div>
+        <h2>Feedback Collector</h2>
+      </div>
+      <div class="card-content">
+        <input type="text" id="feedbackName" placeholder="Your name">
+        <select id="feedbackRating">
+          <option value="">Rate us</option>
+          <option value="⭐">⭐</option>
+          <option value="⭐⭐">⭐⭐</option>
+          <option value="⭐⭐⭐">⭐⭐⭐</option>
+          <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
+          <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
+        </select>
+        <textarea id="feedbackText" placeholder="Your feedback..." rows="3"></textarea>
+        <button onclick="submitFeedback()">Submit Feedback</button>
+        <div id="feedbackList"></div>
+      </div>
+    </div>
+
+    <!-- Clock -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">⏰</div>
+        <h2>Digital Clock</h2>
+      </div>
+      <div class="card-content">
+        <div id="clock" class="clock-display"></div>
+      </div>
+    </div>
+
+    <!-- Palette Generator -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">🎨</div>
+        <h2>Palette Generator</h2>
+      </div>
+      <div class="card-content">
+        <button onclick="generatePalette()">Generate New Palette</button>
+        <div class="color-grid" id="paletteGrid">
+          <div class="color-swatch" style="background: #6C63FF;"></div>
+          <div class="color-swatch" style="background: #4D44DB;"></div>
+          <div class="color-swatch" style="background: #FF6584;"></div>
+          <div class="color-swatch" style="background: #4CC9F0;"></div>
+          <div class="color-swatch" style="background: #F8961E;"></div>
+        </div>
+        <div class="output" id="paletteOutput">
+          Click on any swatch to copy its color code
+        </div>
+      </div>
+    </div>
+  </main>
+
+ <!-- Registration Popup -->
+<div id="registrationPopup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; justify-content: center; align-items: center;">
+  <div style="background: white; padding: 2rem; border-radius: 10px; text-align: center;">
+    <h2 style="color: #00B4D8;">🎉 Registration Successful!</h2>
+    <p>Thank you for signing up!</p>
+    <button onclick="closeRegistrationPopup()" style="margin-top: 1rem; background-color: #00B4D8; color: white; border: none; padding: 0.5rem 1rem; cursor: pointer;">Close</button>
+  </div>
+</div>
+
+<script>
+  function closeRegistrationPopup() {
+    document.getElementById("registrationPopup").style.display = "none";
+  }
+  </script>
+<script>
+  // Theme toggle
+function toggleTheme() {
+    document.body.classList.toggle('dark-mode');
+    const icon = document.querySelector('.theme-toggle');
+    if (document.body.classList.contains('dark-mode')) {
+        icon.textContent = '☀';
+        icon.style.background = 'linear-gradient(135deg, var(--accent), var(--warning))';
+    } else {
+        icon.textContent = '🌓';
+        icon.style.background = 'linear-gradient(135deg, var(--primary), var(--accent))';
+    }
+}
+
+// Color Mixer
+function updateColor() {
+    const red = document.getElementById("red").value;
+    const green = document.getElementById("green").value;
+    const blue = document.getElementById("blue").value;
+    const colorBox = document.getElementById("colorBox");
+
+    document.getElementById("redValue").textContent = red;
+    document.getElementById("greenValue").textContent = green;
+    document.getElementById("blueValue").textContent = blue;
+
+    const rgbColor = `rgb(${red}, ${green}, ${blue})`;
+    colorBox.style.background = rgbColor;
+    
+    // Update text color based on brightness
+    const brightness = (red * 299 + green * 587 + blue * 114) / 1000;
+    colorBox.style.color = brightness > 125 ? 'black' : 'white';
+    
+    // Convert to HEX
+    const toHex = (value) => parseInt(value).toString(16).padStart(2, '0');
+    const hexColor = `#${toHex(red)}${toHex(green)}${toHex(blue)}`;
+    
+    // Update display values
+    document.getElementById("rgbValue").textContent = `RGB: ${red}, ${green}, ${blue}`;
+    document.getElementById("hexValue").textContent = `HEX: ${hexColor.toUpperCase()}`;
+}
+
+function copyColor(event) {
+    const hexValue = document.getElementById("hexValue").textContent.replace('HEX: ', '');
+    navigator.clipboard.writeText(hexValue);
+    
+    const button = event.target;
+    button.textContent = "Copied!";
+    button.style.background = "var(--success)";
+    
+    setTimeout(() => {
+        button.textContent = "Copy Color Code";
+        button.style.background = "linear-gradient(135deg, var(--primary), var(--secondary))";
+    }, 2000);
+}
+
+// Lightbulb
+function toggleLight() {
+    const lightbulb = document.getElementById("lightbulb");
+    if (lightbulb.src.includes("702797.png")) {
+        lightbulb.src = "https://cdn-icons-png.flaticon.com/512/702/702814.png";
+        lightbulb.classList.add("light-on");
+    } else {
+        lightbulb.src = "https://cdn-icons-png.flaticon.com/512/702/702797.png";
+        lightbulb.classList.remove("light-on");
+    }
+}
+
+// Basic Calculator
+function performOperations() {
+    const a = parseFloat(document.getElementById("inputA").value);
+    const b = parseFloat(document.getElementById("inputB").value);
+    const output = document.getElementById("output1");
+
+    if (isNaN(a) || isNaN(b)) {
+        output.innerHTML = '<strong>Error:</strong> Please enter valid numbers';
+        return;
+    }
+
+    const addition = a + b;
+    const subtraction = a - b;
+    const multiplication = a * b;
+    const division = b !== 0 ? (a / b).toFixed(2) : "Infinity";
+    const modulus = b !== 0 ? a % b : "Undefined";
+    const isGreater = a > b;
+    const logicalCheck = (a > 5 && b < 10);
+
+    output.innerHTML = `
+        <strong>Results:</strong><br>
+        <strong>Addition:</strong> ${a} + ${b} = ${addition}<br>
+        <strong>Subtraction:</strong> ${a} - ${b} = ${subtraction}<br>
+        <strong>Multiplication:</strong> ${a} × ${b} = ${multiplication}<br>
+        <strong>Division:</strong> ${a} ÷ ${b} = ${division}<br>
+        <strong>Modulus:</strong> ${a} % ${b} = ${modulus}<br><br>
+        <strong>Comparison:</strong> Is ${a} > ${b}? ${isGreater}<br>
+        <strong>Logical Check:</strong> (${a} > 5 && ${b} < 10) = ${logicalCheck}
+    `;
+}
+
+// Advanced Calculator
+function calculate() {
+    const num2 = parseFloat(document.getElementById("num2").value);
+    const num3 = parseFloat(document.getElementById("num3").value);
+    const operation = document.getElementById("operation").value;
+    const output = document.getElementById("output7");
+
+    if (isNaN(num2) || isNaN(num3)) {
+        output.innerHTML = '<strong>Error:</strong> Please enter valid numbers';
+        return;
+    }
+
+    let result;
+    switch(operation) {
+        case "add":
+            result = `${num2} + ${num3} = ${(num2 + num3).toFixed(2)}`;
+            break;
+        case "subtract":
+            result = `${num2} - ${num3} = ${(num2 - num3).toFixed(2)}`;
+            break;
+        case "multiply":
+            result = `${num2} × ${num3} = ${(num2 * num3).toFixed(2)}`;
+            break;
+        case "divide":
+            if (num3 === 0) {
+                result = "Cannot divide by zero";
+            } else {
+                result = `${num2} ÷ ${num3} = ${(num2 / num3).toFixed(2)}`;
+            }
+            break;
+        default:
+            result = "Invalid operation";
+    }
+
+    output.innerHTML = `<strong>Result:</strong> ${result}`;
+}
+
+// Number Operations
+function calculateSquare() {
+    const num = document.getElementById("num1").value;
+    const output = document.getElementById("output6");
+
+    if (isNaN(num) || num === '') {
+        output.innerHTML = '<strong>Error:</strong> Please enter a valid number';
+        return;
+    }
+
+    const square = num * num;
+    output.innerHTML = `<strong>Square:</strong> ${num}² = ${square}`;
+}
+
+function addNumbers() {
+    const num1 = parseFloat(prompt("Enter first number:"));
+    const num2 = parseFloat(prompt("Enter second number:"));
+    const output = document.getElementById("output6");
+
+    if (isNaN(num1) || isNaN(num2)) {
+        output.innerHTML = '<strong>Error:</strong> Please enter valid numbers';
+        return;
+    }
+
+    const sum = num1 + num2;
+    output.innerHTML = `<strong>Sum:</strong> ${num1} + ${num2} = ${sum}`;
+}
+
+function checkEvenOdd() {
+    const num = document.getElementById("num1").value;
+    const output = document.getElementById("output6");
+
+    if (isNaN(num) || num === '') {
+        output.innerHTML = '<strong>Error:</strong> Please enter a valid number';
+        return;
+    }
+
+    const result = num % 2 === 0 ? "Even" : "Odd";
+    output.innerHTML = `<strong>Result:</strong> ${num} is <strong>${result}</strong>`;
+}
+
+// Grade Calculator
+function calculateGrade() {
+    const marks = parseFloat(document.getElementById("marks").value);
+    const result = document.getElementById("result");
+
+    if (isNaN(marks)) {
+        result.innerHTML = '<strong>Error:</strong> Please enter valid marks';
+        return;
+    }
+
+    let grade;
+    if (marks > 100) {
+        grade = "Error: Marks cannot exceed 100";
+    } else if (marks < 0) {
+        grade = "Error: Marks cannot be negative";
+    } else if (marks >= 95) {
+        grade = "A+ (Outstanding)";
+    } else if (marks >= 90) {
+        grade = "A+";
+    } else if (marks >= 80) {
+        grade = "A";
+    } else if (marks >= 70) {
+        grade = "B";
+    } else if (marks >= 60) {
+        grade = "C";
+    } else if (marks >= 50) {
+        grade = "D";
+    } else {
+        grade = "F (Fail)";
+    }
+
+    result.innerHTML = `<strong>Your Grade:</strong> ${grade}`;
+}
+
+// Password Toggle
+function togglePassword(event) {
+    const passwordField = document.getElementById("passwords");
+    const button = event.target;
+    
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        button.textContent = "Hide Password";
+        button.style.background = "var(--warning)";
+    } else {
+        passwordField.type = "password";
+        button.textContent = "Show Password";
+        button.style.background = "linear-gradient(135deg, var(--primary), var(--secondary))";
+    }
+}
+
+// Color Button
+document.getElementById('colorButton').addEventListener('click', function() {
+    const colors = ['#6C63FF', '#FF6584', '#4CC9F0', '#F8961E', '#4D44DB', '#F72585'];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    this.style.background = randomColor;
+    this.style.color = 'white';
+    this.style.transform = 'scale(1.05)';
+    
+    setTimeout(() => {
+        this.style.transform = '';
+    }, 200);
+});
+
+// Task Manager
+function addTask() {
+    const input = document.getElementById("taskInput");
+    const taskText = input.value.trim();
+
+    if (taskText === "") {
+        alert("Please enter a task!");
+        return;
+    }
+
+    const li = document.createElement("li");
+    li.className = "task-item fade-in";
+    li.innerHTML = `
+        <span onclick="toggleTaskComplete(this)">${taskText}</span>
+        <button class="task-delete" onclick="deleteTask(this)">🗑</button>
+    `;
+    document.getElementById("taskList").appendChild(li);
+    input.value = "";
+}
+
+function toggleTaskComplete(element) {
+    element.classList.toggle("task-completed");
+}
+
+function deleteTask(button) {
+    button.parentElement.remove();
+}
+
+// Feedback Collector
+function submitFeedback() {
+    const name = document.getElementById("feedbackName").value.trim();
+    const rating = document.getElementById("feedbackRating").value;
+    const feedback = document.getElementById("feedbackText").value.trim();
+
+    if (!name || !rating || !feedback) {
+        alert("Please fill in all fields.");
+        return;
+    }
+
+    const card = document.createElement("div");
+    card.className = "feedback-card fade-in";
+    card.innerHTML = `
+        <strong>${name}</strong> rated us ${rating}<br>
+        <p>${feedback}</p>
+    `;
+
+    document.getElementById("feedbackList").appendChild(card);
+
+    // Clear inputs
+    document.getElementById("feedbackName").value = "";
+    document.getElementById("feedbackRating").value = "";
+    document.getElementById("feedbackText").value = "";
+}
+
+// Registration Form
+document.getElementById("registerForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    
+    let valid = true;
+    const name = document.getElementById("regName").value;
+    const email = document.getElementById("regEmail").value;
+    const password = document.getElementById("regPassword").value;
+    
+    // Reset all errors
+    document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('#registerForm input').forEach(el => el.style.borderColor = '');
+    
+    // Validate name
+    if (name === "") {
+        document.getElementById("regNameError").style.display = "block";
+        document.getElementById("regName").style.borderColor = "var(--danger)";
+        valid = false;
+    }
+    
+    // Validate email
+    const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    if (!email.match(emailPattern)) {
+        document.getElementById("regEmailError").style.display = "block";
+        document.getElementById("regEmail").style.borderColor = "var(--danger)";
+        valid = false;
+    }
+    
+    // Validate password
+    if (password.length < 6) {
+        document.getElementById("regPasswordError").style.display = "block";
+        document.getElementById("regPassword").style.borderColor = "var(--danger)";
+        valid = false;
+    }
+    
+    if (valid) {
+        document.getElementById("registrationPopup").style.display = "flex";
+        this.reset();
+    }
+});
+
+function closeRegistrationPopup() {
+    document.getElementById("registrationPopup").style.display = "none";
+}
+
+// Clock
+function updateClock() {
+    const now = new Date();
+    const clock = document.getElementById("clock");
+    clock.textContent = now.toLocaleTimeString();
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// Palette Generator
+function generatePalette() {
+    const paletteGrid = document.getElementById("paletteGrid");
+    paletteGrid.innerHTML = '';
+    
+    // Generate 5 random colors
+    for (let i = 0; i < 5; i++) {
+        const randomColor = `#${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')}`;
+        const swatch = document.createElement("div");
+        swatch.className = "color-swatch";
+        swatch.style.background = randomColor;
+        swatch.onclick = function() {
+            copySwatchColor(this);
+        };
+        paletteGrid.appendChild(swatch);
+    }
+    
+    document.getElementById("paletteOutput").textContent = "New palette generated! Click any swatch to copy.";
+}
+
+function copySwatchColor(element) {
+    const color = window.getComputedStyle(element).backgroundColor;
+    navigator.clipboard.writeText(rgbToHex(color));
+    
+    // Highlight the clicked swatch
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+        swatch.classList.remove('active');
+    });
+    element.classList.add('active');
+    
+    document.getElementById("paletteOutput").textContent = `Copied: ${rgbToHex(color)}`;
+}
+
+function rgbToHex(rgb) {
+    // Convert rgb(r, g, b) to #RRGGBB
+    const parts = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    const hex = (x) => parseInt(x).toString(16).padStart(2, '0');
+    return `#${hex(parts[1])}${hex(parts[2])}${hex(parts[3])}`.toUpperCase();
+}
+
+ <!-- Initialize -->
+updateColor();
+document.getElementById("colorButton").style.background = "linear-gradient(135deg, var(--primary), var(--secondary))";
+generatePalette();
+
+   
+  </script>
+</body>
+</html>
